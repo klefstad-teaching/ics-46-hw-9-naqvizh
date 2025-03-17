@@ -3,26 +3,26 @@
 vector<int> dijkstra_shortest_path(const Graph& G, int source, vector<int>& previous)
 {
     int size = G.size();
-    if (size == 0 || source < 0 || source >= size) return {}; // initial checks
+    if (size == 0 || source >= size) return {}; // empty or out of bounds
     
     vector<int> distances(size, INF);
-    distances[source] = 0;
-    previous[source] = -1;
+    distances[source] = 0; // source has no weight
+    previous[source] = -1; // there is no previous node to weigh
     priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-    pq.push({0, source});
+    pq.push({0, source}); // source node
 
     while (!pq.empty()) {
-        auto [dist, eu] = pq.top();
+        auto [dist, eu] = pq.top(); // 
         pq.pop();
 
         if (dist > distances[eu]) continue; // ignores outdated entries
         for (const Edge& edge : G[eu]) { // ADJ LIST
             int ev = edge.dst; // destination vector
             int weight = edge.weight; // the weight
-            if (distances[eu] + weight < distances[ev]) {
-                distances[ev] = distances[eu] + weight;
+            if (distances[eu] + weight < distances[ev]) { // is there a shorter path?
+                distances[ev] = distances[eu] + weight; // update distance
                 previous[ev] = eu;
-                pq.push({distances[ev], ev});
+                pq.push({distances[ev], ev}); // update queue
             }
         }
     }
